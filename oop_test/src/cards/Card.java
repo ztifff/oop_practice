@@ -3,32 +3,46 @@ package cards;
 public class Card {
 	 private String type; // Monster, Magic, Trap
 	    private String rarity; // Common, Rare, Super Rare
-	    private boolean isMeta; // Meta status
-
-	    public Card(String type, String rarity, boolean isMeta) {
-	        this.type = type;
-	        this.rarity = rarity;
-	        this.isMeta = isMeta;
-	    }
+	    private String isMeta; // Meta status
+	    
+	    public void setType(String type) {
+			this.type = type;
+		}
+	    
+	    public void setRarity(String rarity) {
+			this.rarity = rarity;
+		}
+	    
+	    public void setisMeta(String isMeta) {
+			this.isMeta = isMeta;
+		}
 
 	    public double calculateFinalPrice() {
 	        double basePrice = 0;
-	        if (rarity.equals("Common")) {
+	        if (rarity.equalsIgnoreCase("Common")) {
 	            basePrice = 100;
-	        } else if (rarity.equals("Rare")) {
+	        } else if (rarity.equalsIgnoreCase("Rare")) {
 	            basePrice = 150;
-	        } else if (rarity.equals("Super Rare")) {
+	        } else if (rarity.equalsIgnoreCase("Super Rare")) {
 	            basePrice = 200;
 	        }
 
-	        if (isMeta) {
+	        if (isMeta.equalsIgnoreCase("yes")) {
 	            basePrice *= 3; // Meta multiplier
-	        }
-	        return basePrice + (basePrice * 0.5); // Add 50% fee
+	        } else if (isMeta.equalsIgnoreCase("No")) {
+				basePrice += basePrice;
+				basePrice *= 0.5; // Add 50% fee
+			}
+	        return basePrice; 
 	    }
-
-	    public String toString() {
-	        return "Type: " + type + ", Rarity: " + rarity + ", Meta: " + (isMeta ? "Yes" : "No") + ", Final Price: " + calculateFinalPrice();
-	    }
+	    
+	    public void displayCard() {
+	    	System.out.println("Card Details:\n");
+			System.out.println("Card Type: " + type);
+			System.out.println("Card Rarity: " + rarity);
+			System.out.println("Card Meta: " + isMeta);
+			System.out.println("Card Price: " + calculateFinalPrice());
+		}
+	    
 
 }
