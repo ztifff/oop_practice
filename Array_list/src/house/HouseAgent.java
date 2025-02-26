@@ -1,79 +1,59 @@
 package house;
 
 public class HouseAgent {
-	private String name;
-	private String Age;
-	private String typeString;
-	private String locationString;
-	private int size;
-	private int basePrice;
+    private final String name;
+    private final String age;
+    private final String type;
+    private final String location;
+    private final int size;
+    private final int basePrice;
 
-	public HouseAgent(String name, String Age, String typeString, String locationString, int size, int basePrice) {
-		this.name = name;
-		this.Age = Age;
-		this.typeString = typeString;
-		this.locationString = locationString;
-		this.size = size;
-		this.basePrice = basePrice;
-	}
+    public HouseAgent(String name, String age, String type, String location, int size, int basePrice) {
+        this.name = name;
+        this.age = age;
+        this.type = type;
+        this.location = location;
+        this.size = size;
+        this.basePrice = basePrice;
+    }
 
-	public double CalculationPrice() {
+    public double calculatePrice() {
+        double ageIncrease = basePrice * ageIncreaseValue();
+        double typeIncrease = basePrice * typeIncreaseValue();
+        double sizeIncrease = basePrice * sizeIncreaseValue();
+        return basePrice + ageIncrease + typeIncrease + sizeIncrease;
+    }
 
-		double ageIncrease =  basePrice * ageIncreasedValue();
-		double typeIncrease = basePrice * typeIncreasedvalue();
-		double sizeIncrease = basePrice * sizeIncreasedValue();
+    public double ageIncreaseValue() {
+        return switch (age) {
+            case "New" -> 0.20;
+            case "Vintage" -> 0.10;
+            case "Old" -> -0.10;
+            default -> 0;
+        };
+    }
 
-		return ageIncrease + typeIncrease + sizeIncrease + basePrice;
+    public double typeIncreaseValue() {
+        return switch (type) {
+            case "Modern" -> 0.20;
+            case "Standard" -> 0.10;
+            case "Local" -> -0.10;
+            default -> 0;
+        };
+    }
 
-	}
+    public double sizeIncreaseValue() {
+        return switch (size) {
+            case 50 -> 0.30;
+            case 30 -> 0.20;
+            case 10 -> 0.10;
+            default -> 0;
+        };
+    }
 
-	public double ageIncreasedValue() {
-
-		return switch (Age) {
-		case "New", "new" -> 0.20; 
-		case "Vintage", "vintage" -> 0.10;
-		case "Old", "old" -> -0.10;
-		default ->
-		throw new IllegalArgumentException("Unexpected value: " + Age);
-		};
-
-	}
-	public double typeIncreasedvalue() {
-
-		return switch (typeString) {
-		case "Modern", "modern" -> 0.20;
-		case "Standard", "standard" -> 0.10;
-		case "Local", "local" -> -0.10;
-		default ->
-		throw new IllegalArgumentException("Unexpected value: " + typeString);
-		};
-	}
-
-	public double sizeIncreasedValue() {
-
-		return switch (size) {
-		case 50 -> 0.30;
-		case 30 -> 0.20;
-		case 10 -> 0.10;
-		default ->
-		throw new IllegalArgumentException("Unexpected value: " + size);
-		};
-	}
-
-	public String getName() {
-		return name;
-	}
-	public String getAge() {
-		return Age;
-	}
-	public String getTypeString() {
-		return typeString;
-	}
-	public String getLocationString() {
-		return locationString;
-	}
-	public int getSize() {
-		return size;
-	}
-
+    @Override
+    public String toString() {
+        return "Name: " + name + "\nAge: " + age + "\nType: " + type + "\nSize: " + size + " hectares" +
+                "\nLocation: " + location + "\nTotal Price: " + calculatePrice() + "\n";
+    }
 }
