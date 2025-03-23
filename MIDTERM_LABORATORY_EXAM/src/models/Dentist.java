@@ -7,13 +7,13 @@ public class Dentist extends Person {
     private static int idCounter = 1; // Static counter for unique ID
     private String dentistID;
     private double commissionRate;
-    private List<Services> servicesOffered;
+    private List<Services> servicesOffered = new ArrayList<>();
 
-    public Dentist(String name, String address, String contactNumber, double commissionRate, List<Services> servicesOffered) {
+    public Dentist(String name, String address, String contactNumber, double commissionRate) {
         super(name, address, contactNumber);
         this.dentistID = String.format("%04d", idCounter++);
         this.commissionRate = commissionRate;
-        this.servicesOffered = new ArrayList<>(servicesOffered); // Store passed list
+        
     }
     
     public String getName() {
@@ -21,7 +21,18 @@ public class Dentist extends Person {
 	}
 
     public void addService(Services service) {
-        servicesOffered.add(service);
+    	if (service != null) {
+    		for (Services existingService : servicesOffered) {
+                if (existingService.getServiceName().equalsIgnoreCase(service.getServiceName())) {
+                    System.out.println("This service is already offered.");
+                    return; 
+                }
+            }
+    		service.setDentist(this);
+            servicesOffered.add(service);
+        } else {
+            System.out.println("This service is already offered.");
+        }
     }
 
     public String getDentistID() {

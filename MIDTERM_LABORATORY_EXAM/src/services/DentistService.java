@@ -20,9 +20,9 @@ public class DentistService {
     	String contact = InputValidator.validateNonEmptyInput(scanner, "Enter dentist contact number: ");
 
     	double commissionRate = InputValidator.validatePositiveDouble(scanner, "Enter commission rate (%): ");
+    	
+    	 Dentist dentist = new Dentist(name, address, contact, commissionRate);
 
-        List<Services> servicesOffered = new ArrayList<>();
-        Set<Integer> selectedOptions = new HashSet<>();
         System.out.println("Enter services offered: ");
         System.out.println("[1] Fillings");
         System.out.println("[2] Check-Up");
@@ -39,8 +39,7 @@ public class DentistService {
 			        continue;
 			    }
 			 
-			 servicesOffered.add(new Services(getServiceIndex(choices), getServicePrice(getServiceIndex(choices))));
-			 selectedOptions.add(choices);
+			 dentist.addService(new Services(getServiceIndex(choices), getServicePrice(getServiceIndex(choices))));
 			 break;
 		}
         
@@ -64,13 +63,8 @@ public class DentistService {
 					        continue;
 					    }
 					 
-					 if (selectedOptions.contains(choices)) {
-					        System.out.println("You have already selected this service. Choose another.");
-					        continue;
-					    }
 					 
-					 servicesOffered.add(new Services(getServiceIndex(choices), getServicePrice(getServiceIndex(choices))));
-					 selectedOptions.add(choices);
+					 dentist.addService(new Services(getServiceIndex(choices), getServicePrice(getServiceIndex(choices))));
 					 break;
 				}
 			} else if (another == 2) {
@@ -81,7 +75,7 @@ public class DentistService {
 		}
         
         System.out.println("Services selected:");
-        for (Services service : servicesOffered) {
+        for (Services service : dentist.getServicesOffered()) {
             System.out.println("- " + service.getServiceName() + ": " + service.getPrice());
         }
     
@@ -106,7 +100,7 @@ public class DentistService {
             }
         }
 */
-        Dentist dentist = new Dentist(name, address, contact, commissionRate, servicesOffered);
+       
         dentists.add(dentist);
 
         System.out.println("Dentist added successfully! ID: " + dentist.getDentistID());

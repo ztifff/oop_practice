@@ -3,6 +3,7 @@ package models;
 public class Services {
 	private String serviceName;
     private double price;
+    private Dentist dentist;
     
     public Services(String serviceName, double price) {
         this.serviceName = serviceName;
@@ -15,6 +16,10 @@ public class Services {
     
     public double getPrice() {
         return price;
+    }
+    
+    public void setDentist(Dentist dentist) {
+        this.dentist = dentist;
     }
     
     @Override

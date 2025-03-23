@@ -9,7 +9,7 @@ public class InputValidator {
             System.out.print(message);
             input = scanner.nextLine().trim();
             if (input.isEmpty()) {
-                System.out.println("Please enter a name!"); // Error message
+                System.out.println("Please enter a name!\n"); // Error message
             }
         } while (input.isEmpty());
         return input;
@@ -19,17 +19,17 @@ public class InputValidator {
         double value;
         while (true) {
             System.out.print(message);
-            String input = scanner.nextLine().trim(); // Read full line & remove spaces
+            String input = scanner.nextLine().trim(); 
 
             try {
-                value = Double.parseDouble(input); // Convert input to double
+                value = Double.parseDouble(input);
                 if (value > 0) {
-                    return value; // Return if positive number
+                    return value; 
                 } else {
-                    System.out.println("Invalid input. Please enter a positive number.");
+                    System.out.println("Invalid input. Please enter a positive number.\n");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
+                System.out.println("Invalid input. Please enter a valid number.\n");
             }
         }
     }
@@ -39,17 +39,17 @@ public class InputValidator {
         int value;
         while (true) {
             System.out.print(message);
-            String input = scanner.nextLine().trim(); // Read full line & remove spaces
+            String input = scanner.nextLine().trim(); 
 
             try {
-                value = Integer.parseInt(input); // Convert input to an integer
+                value = Integer.parseInt(input); 
                 if (value > 0) {
-                    return value; // Return if positive integer
+                    return value; 
                 } else {
-                    System.out.println("Invalid input. Please enter a positive integer.");
+                    System.out.println("Invalid input. Please enter a positive integer.\n");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a whole number.");
+                System.out.println("Invalid input. Please enter a whole number.\n");
             }
         }
     }

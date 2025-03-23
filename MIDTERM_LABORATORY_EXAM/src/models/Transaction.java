@@ -18,28 +18,29 @@ public class Transaction {
         this.client = client;
         this.dentist = dentist;
         this.services = new ArrayList<>(services);
+        
+        for (Services service : services) {
+            this.services.add(new Services(service.getServiceName(), service.getPrice())); 
+        }
     }
     
     public String getTransactionID() {
 		return transactionID;
 	}
     
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\nTransaction ID: ").append(transactionID)
-          .append("\nDate: ").append(date)
-          .append("\nClient: ").append(client.getClientID()).append(" - ").append(client.getName())
-          .append("\nDentist: ").append(dentist.getDentistID()).append(" - ").append(dentist.getName())
-          .append("\nServices:\n");
+    public void displayTransaction() {
+    	System.out.println("\nTransaction ID: " + transactionID);
+    	System.out.println("Date: " + date);
+    	System.out.println("Client: " + client.getClientID() + " - " + client.getName());
+    	System.out.println("Dentist: " + dentist.getDentistID() + " - " + dentist.getName());
+    	System.out.println("Services:");
 
-        double total = 0;
-        for (Services s : services) {
-            sb.append(" - ").append(s.getServiceName()).append(" (₱").append(s.getPrice()).append(")\n");
-            total += s.getPrice();
-        }
+    	double total = 0;
+    	for (Services s : services) {
+    	    System.out.println(" - " + s.getServiceName() + " (₱" + s.getPrice() + ")");
+    	    total += s.getPrice();
+    	}
 
-        sb.append("Total Cost: ₱").append(total);
-        return sb.toString();
+    	System.out.println("Total Cost: ₱" + total);
     }
 }
