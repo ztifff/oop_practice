@@ -13,107 +13,101 @@ public class TransactionService {
 	private List<Transaction> transactions = new ArrayList<>();
 
 	public void createTransaction(Scanner scanner, ClientService clientService, DentistService dentistService) {
-		System.out.print("Enter Client ID: ");
-		String clientID = scanner.nextLine();
-		Client client = clientService.getClientById(clientID);
-		if (client == null) {
-			System.out.println("Client not found.");
-			return;
-		}
-
-		System.out.print("Enter Dentist ID: ");
-		String dentistID = scanner.nextLine();
-		Dentist dentist = dentistService.getDentistById(dentistID);
-		if (dentist == null) {
-			System.out.println("Dentist not found.");
-			return;
-		}
-
-		List<Services> offeredServices = dentist.getServicesOffered();
-		if (offeredServices.isEmpty()) {
-			System.out.println("This dentist does not offer any services.");
-			return;
-		}
-
-		System.out.println("\nAvailable Services:");
-		for (int i = 0; i < offeredServices.size(); i++) {
-			System.out.println("[" + (i + 1) + "] " + offeredServices.get(i).getServiceName() + " (₱" + offeredServices.get(i).getPrice() + ")");
-		}
-		List<Services> selectedServices = new ArrayList<>();
-
-		int choice;
-		while (true) {
-			choice = InputValidator.validatePositiveInt(scanner, "Enter services performed: ");
-
-			if (choice < 1 || choice > offeredServices.size()) {
-				System.out.println("Invalid choice. Please select a number between 1 to " + offeredServices.size() + ".");
-				continue;
-			}
-
-			selectedServices.add(offeredServices.get(choice-1));
-			break;
-		}
-
-		while (true) {
-
-			System.out.println("Enter Another service offered?");
-			System.out.println("[1] Yes");
-			System.out.println("[2] No");
-
-			int another = InputValidator.validatePositiveInt(scanner, "Enter choice: ");
-
-			if (another == 1) {
-				while (true) {
-					System.out.println("\nAvailable Services:");
-					for (int i = 0; i < offeredServices.size(); i++) {
-						System.out.println("[" + (i + 1) + "] " + offeredServices.get(i).getServiceName() + " (₱" + offeredServices.get(i).getPrice() + ")");
-					}
-					choice = InputValidator.validatePositiveInt(scanner, "Enter choice: ");
-
-					if (choice < 1 || choice > offeredServices.size()) {
-						System.out.println("Invalid choice. Please select a number between 1 and " + offeredServices.size() + ".");
-						continue;
-					}
-
-
-					selectedServices.add(offeredServices.get(choice-1));
-					break;
-				}
-			} else if (another == 2) {
-				break;
-			} else {
-				System.out.println("Invalid input. Please enter 1 (Yes) or 2 (No).");
-			}
-		}
-
-		/*
-        System.out.println("Enter services performed: ");
-        String[] selectedNumbers = scanner.nextLine().split(",");
-
-
-        for (String num : selectedNumbers) {
-            try {
-                int index = Integer.parseInt(num.trim()) - 1;
-                if (index >= 0 && index < offeredServices.size()) {
-                    selectedServices.add(offeredServices.get(index));
-                } else {
-                    System.out.println("Invalid selection: " + num);
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input: " + num);
-            }
-        }
-		 */
-		if (selectedServices.isEmpty()) {
-			System.out.println("No valid services selected. Transaction not created.");
-			return;
-		}
+		
+			Client client = selectedClient(scanner, clientService);
+			
+			Dentist dentist = selectedDentist(scanner, dentistService);
+			
+			List<Services> selectedServices = selectedServices(scanner, dentist);
 
 		Transaction transaction = new Transaction(client, dentist, selectedServices);
 		transactions.add(transaction);
 
 		System.out.println("Transaction recorded successfully! Transaction ID: " + transaction.getTransactionID());
 	}
+	
+	public Client selectedClient(Scanner scanner, ClientService clientService) {
+		List<Client> clients =  clientService.getClients();
+		if (clients.isEmpty()) {
+			System.out.println("Client is Empty.");
+			
+		}
+		while (true) {
+			System.out.println("\nSelect a Client: ");
+		for (int i = 0; i < clients.size(); i++) {
+			System.out.println((i+1)+ ". " + clients.get(i).getClientID() + " - " + clients.get(i).getName());
+		}
+		int clientChoice = InputValidator.validatePositiveInt(scanner, "Enter choice: ");
+		if (clientChoice < 1 || clientChoice > clients.size()) {
+			System.out.println("Invalid Choices! Please Select from 1 to " + clients.size() + ".");
+		} else {
+			Client client = clients.get(clientChoice -1);
+			return client;
+		}
+			
+		}
+		
+	}
+	
+	public Dentist selectedDentist(Scanner scanner, DentistService dentistService) {
+		List<Dentist> dentists = dentistService.getDentists();
+        if (dentists.isEmpty()) {
+            System.out.println("No dentists available.");
+        }
+
+        while (true) {
+			System.out.println("\nSelect a Dentist:");
+        for (int i = 0; i < dentists.size(); i++) {
+            System.out.println((i + 1) + ". " + dentists.get(i).getDentistID() + " - " + dentists.get(i).getName());
+        }
+        int dentistChoice = InputValidator.validatePositiveInt(scanner, "Enter choice: ");
+        if (dentistChoice < 1 || dentistChoice > dentists.size()) {
+            System.out.println("Invalid choice! Please select between 1 and " + dentists.size() + ".");
+        }else {
+			Dentist dentist = dentists.get(dentistChoice - 1); 
+			return dentist;
+		}
+        
+		}
+        
+	}
+	
+	public List<Services> selectedServices(Scanner scanner, Dentist dentistoffered) {
+	    List<Services> offeredServices = dentistoffered.getServicesOffered();
+	    List<Services> selectedServices = new ArrayList<>();
+
+	    if (offeredServices.isEmpty()) {
+	        System.out.println("This dentist does not offer any services.");
+	        return selectedServices; // Return an empty list if no services available
+	    }
+
+	    while (true) {
+	        System.out.println("\nAvailable Services:");
+	        for (int i = 0; i < offeredServices.size(); i++) {
+	            System.out.println("[" + (i + 1) + "] " + offeredServices.get(i).getServiceName() + " (₱" + offeredServices.get(i).getPrice() + ")");
+	        }
+
+	        int choice = InputValidator.validatePositiveInt(scanner, "Enter services performed (or 0 to finish): ");
+
+	        if (choice == 0) break; // Allow user to finish selecting services
+
+	        if (choice < 1 || choice > offeredServices.size()) {
+	            System.out.println("Invalid choice. Please select a number between 1 and " + offeredServices.size() + ".");
+	            continue;
+	        }
+
+	        Services selectedService = offeredServices.get(choice - 1);
+	        selectedServices.add(selectedService);
+	        System.out.println("Service added: " + selectedService.getServiceName());
+	    }
+
+	    if (selectedServices.isEmpty()) {
+	        System.out.println("No valid services selected. Transaction not created.");
+	    }
+
+	    return selectedServices; // Ensure method always returns a list
+	}
+
 
 	public void viewTransactions() {
 		if (transactions.isEmpty()) {

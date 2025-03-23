@@ -1,9 +1,12 @@
 package clinicManagement;
 
-import services.*;
+import services.ClientService;
+import services.DentistService;
+import services.TransactionService;
 import utils.InputValidator;
 
 import java.util.Scanner;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -11,6 +14,7 @@ public class Main {
         ClientService clientService = new ClientService();
         DentistService dentistService = new DentistService();
         TransactionService transactionService = new TransactionService();
+        
         
         while (true) {
             System.out.println("\nClinic Management System");

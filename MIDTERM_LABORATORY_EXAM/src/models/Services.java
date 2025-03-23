@@ -22,6 +22,10 @@ public class Services {
         this.dentist = dentist;
     }
     
+    public Dentist getDentist() {
+    	return dentist;
+    }
+    
     @Override
     public String toString() {
         return serviceName + " - ₱" + price;

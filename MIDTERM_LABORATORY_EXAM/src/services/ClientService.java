@@ -9,6 +9,13 @@ import java.util.Scanner;
 
 public class ClientService {
     private List<Client> clients = new ArrayList<>();
+    
+    public ClientService() {
+        // Predefined Clients
+        clients.add(new Client("Juan Dela Cruz", "Manila, Philippines", "09123456789"));
+        clients.add(new Client("Maria Santos", "Cebu City, Philippines", "09234567890"));
+        clients.add(new Client("Pedro Reyes", "Davao City, Philippines", "09345678901"));
+    }
 
     public void addClient(Scanner scanner) {
     	String name = InputValidator.validateNonEmptyInput(scanner, "Enter your name: ");
@@ -31,6 +38,10 @@ public class ClientService {
 		}
     	return null;
     }
+    
+    public List<Client> getClients() {
+		return clients;
+	}
 
     public void listClients() {
         if (clients.isEmpty()) {

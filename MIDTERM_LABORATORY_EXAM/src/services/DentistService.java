@@ -4,13 +4,28 @@ import utils.InputValidator;
 import models.Dentist;
 import models.Services;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
 public class DentistService {
     private List<Dentist> dentists = new ArrayList<>();
+    
+    public DentistService() {
+        // Predefined Dentists
+        Dentist dentist1 = new Dentist("Dr. Enrique Villanueva", "Quezon City, Philippines", "09456789012", 10.0);
+        Dentist dentist2 = new Dentist("Dr. Andrea Ramos", "Taguig City, Philippines", "09567890123", 12.5);
+
+        // Assign services to dentists
+        dentist1.addService(new Services("Fillings", 1000.0));
+        dentist1.addService(new Services("Checkup", 600.0));
+
+        dentist2.addService(new Services("Whitening", 500.0));
+        dentist2.addService(new Services("Extraction", 700.0));
+
+        // Add dentists to the list
+        dentists.add(dentist1);
+        dentists.add(dentist2);
+    }
 
     public void addDentist(Scanner scanner) {
     	String name = InputValidator.validateNonEmptyInput(scanner, "Enter dentist name: ");
@@ -114,6 +129,10 @@ public class DentistService {
 		}
     	return null;
     }
+    
+    public List<Dentist> getDentists() {
+		return dentists;
+	}
 
     private double getServicePrice(String serviceName) {
         switch (serviceName) {
