@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public class TransactionService {
 	private List<Transaction> transactions = new ArrayList<>();
+	private List<Transaction> archivedTransactions = new ArrayList<>();
 
 	public void createTransaction(Scanner scanner, ClientService clientService, DentistService dentistService) {
 		
@@ -24,6 +25,7 @@ public class TransactionService {
 		transactions.add(transaction);
 
 		System.out.println("Transaction recorded successfully! Transaction ID: " + transaction.getTransactionID());
+		
 	}
 	
 	public Client selectedClient(Scanner scanner, ClientService clientService) {
@@ -107,16 +109,50 @@ public class TransactionService {
 
 	    return selectedServices; // Ensure method always returns a list
 	}
+	
+	public void archiveTransaction(Scanner scanner) {
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions available to archive.");
+            return;
+        }
+        
+        System.out.println("Select a transaction to archive:");
+        for (int i = 0; i < transactions.size(); i++) {
+            System.out.println((i + 1) + ". Transaction ID: " + transactions.get(i).getTransactionID());
+        }
+        
+        int choice = InputValidator.validatePositiveInt(scanner, "Enter choice: ");
+        if (choice < 1 || choice > transactions.size()) {
+            System.out.println("Invalid choice.");
+            return;
+        }
+        
+        Transaction transactionToArchive = transactions.remove(choice - 1);
+        archivedTransactions.add(transactionToArchive);
+        System.out.println("Transaction ID " + transactionToArchive.getTransactionID() + " archived successfully!");
+    }
 
 
 	public void viewTransactions() {
-		if (transactions.isEmpty()) {
-			System.out.println("No transactions recorded.");
-			return;
-		}
-		for (Transaction transaction : transactions) {
-			transaction.displayTransaction();
-		}
-	}
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions recorded.");
+            return;
+        }
+        for (Transaction transaction : transactions) {
+            transaction.displayTransaction();
+        }
+    }
+	
+	public void viewArchivedTransactions() {
+        if (archivedTransactions.isEmpty()) {
+            System.out.println("No archived transactions.");
+            return;
+        }
+        for (Transaction transaction : archivedTransactions) {
+            transaction.displayTransaction();
+        }
+    }
+
+
 
 }

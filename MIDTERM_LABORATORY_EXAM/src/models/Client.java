@@ -19,4 +19,5 @@ public class Client extends Person {
     public String getName() {
 		return name;
 	}
+    
 }

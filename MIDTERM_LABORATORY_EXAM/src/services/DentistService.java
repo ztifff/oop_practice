@@ -32,11 +32,15 @@ public class DentistService {
     	
     	String address = InputValidator.validateNonEmptyInput(scanner, "Enter dentist address: ");
 
-    	String contact = InputValidator.validateNonEmptyInput(scanner, "Enter dentist contact number: ");
+    	String contactNumber = InputValidator.validateContactNumber(scanner, "Enter dentist contact number: ", 11);
 
     	double commissionRate = InputValidator.validatePositiveDouble(scanner, "Enter commission rate (%): ");
+    	if (commissionRate < 0 || commissionRate > 100) {
+    		System.out.println("Commission rate must be between 0% and 100%.");
+    		return;
+        }
     	
-    	 Dentist dentist = new Dentist(name, address, contact, commissionRate);
+    	 Dentist dentist = new Dentist(name, address, contactNumber, commissionRate);
 
         System.out.println("Enter services offered: ");
         System.out.println("[1] Fillings");
@@ -94,27 +98,6 @@ public class DentistService {
             System.out.println("- " + service.getServiceName() + ": " + service.getPrice());
         }
     
-        /*
-        String input;
-        do {
-            System.out.print("Enter choice (comma-separated numbers, e.g., 1,3): ");
-            input = scanner.nextLine().trim();
-        } while (input.isEmpty());
-        
-        String[] selectedNumbers = input.split(",");
-        for (String num : selectedNumbers) {
-            try {
-                int index = Integer.parseInt(num.trim()) - 1;
-                if (index >= 0 && index < serviceNames.length) {
-                    servicesOffered.add(new Services(serviceNames[index], getServicePrice(serviceNames[index])));
-                } else {
-                    System.out.println("Invalid selection: " + num);
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input: " + num);
-            }
-        }
-*/
        
         dentists.add(dentist);
 

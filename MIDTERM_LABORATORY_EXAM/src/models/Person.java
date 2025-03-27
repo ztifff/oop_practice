@@ -8,4 +8,5 @@ public class Person {
 		this.address = address;
 		this.contactNumber = contactNumber;
 	}
+	
 }

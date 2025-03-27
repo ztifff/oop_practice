@@ -34,7 +34,6 @@ public class InputValidator {
         }
     }
 
-    
     public static int validatePositiveInt(Scanner scanner, String message) {
         int value;
         while (true) {
@@ -55,5 +54,17 @@ public class InputValidator {
     }
 
     
-    }
+    public static String validateContactNumber(Scanner scanner, String message, int requiredLength) {
+        String contactNumber;
+        while (true) {
+            System.out.print(message);
+            contactNumber = scanner.nextLine().trim();
 
+            if (contactNumber.matches("\\d{" + requiredLength + "}")) {
+                return contactNumber; // Valid contact number
+            } else {
+                System.out.println("Invalid contact number! It must be exactly " + requiredLength + " digits.\n");
+            }
+        }
+    }
+}

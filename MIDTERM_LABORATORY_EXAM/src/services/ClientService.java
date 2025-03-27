@@ -22,9 +22,10 @@ public class ClientService {
 
     	String address = InputValidator.validateNonEmptyInput(scanner, "Enter client address: ");
         
-    	String contact = InputValidator.validateNonEmptyInput(scanner, "Enter client contact number: ");
+    	String contactNumber = InputValidator.validateContactNumber(scanner, "Enter client contact number: ", 11);
 
-        Client client = new Client(name, address, contact);
+
+        Client client = new Client(name, address, contactNumber);
         clients.add(client);
 
         System.out.println("Client added successfully! ID: " + client.getClientID());

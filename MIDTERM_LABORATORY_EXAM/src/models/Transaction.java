@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import services.TransactionService;
-
 public class Transaction {
 	private static int idCounter = 1;
     private final String transactionID;
@@ -22,6 +20,7 @@ public class Transaction {
         this.services = new ArrayList<>(services);
         
     }
+    
     
     public String getTransactionID() {
 		return transactionID;

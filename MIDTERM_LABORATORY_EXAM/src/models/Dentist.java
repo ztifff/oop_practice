@@ -30,9 +30,7 @@ public class Dentist extends Person {
             }
     		service.setDentist(this);
             servicesOffered.add(service);
-        } else {
-            System.out.println("This service is already offered.");
-        }
+        } 
     }
 
     public String getDentistID() {
@@ -47,6 +45,26 @@ public class Dentist extends Person {
         return servicesOffered;
     }
 
+    public double getServicePrice(String serviceName) {
+        switch (serviceName) {
+            case "Fillings": return 1000.0;
+            case "Checkup": return 600.0;
+            case "Whitening": return 500.0;
+            case "Extraction": return 700.0;
+            default: return 0.0;
+        }
+    }
+    
+    public String getServiceIndex(int services) {
+    	switch (services) {
+        case 1: return "Fillings";
+        case 2: return "Checkup";
+        case 3: return "Whitening";
+        case 4: return "Extraction";
+        default: return "";
+    }
+	}
+    
     @Override
     public String toString() {
         return "Dentist ID: " + dentistID + ", Name: " + name + ", Commission: " + commissionRate + "%";
