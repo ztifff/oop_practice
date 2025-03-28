@@ -1,7 +1,14 @@
 package clinicManagement;
 
-import java.util.*;
-import models.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+import models.Client;
+import models.Dentist;
+import models.Transaction;
+import utils.InputValidator;
+import models.Services;
 
 public class Main {
 	private static final List<Client> clients = new ArrayList<>();
@@ -22,9 +29,8 @@ public class Main {
 			System.out.println("5. Archive Transaction");
 			System.out.println("6. View Archived Transactions");
 			System.out.println("7. Exit");
-			System.out.print("Choose an option: ");
 
-			int choice = getValidInt(scanner);
+			int choice = InputValidator.validatePositiveInt(scanner, "Choose an option: ");
 
 			switch (choice) {
 			case 1 -> addClient(scanner);
@@ -44,10 +50,9 @@ public class Main {
 	}
 
 	private static void initializeData() {
-		clients.addAll(Arrays.asList(
-				new Client("Juan Dela Cruz", "Manila, Philippines", "09123456789"),
-				new Client("Maria Santos", "Cebu City, Philippines", "09234567890"),
-				new Client("Pedro Reyes", "Davao City, Philippines", "09345678901")));
+		clients.add(new Client("Juan Dela Cruz", "Manila, Philippines", "09123456789"));
+		clients.add(new Client("Maria Santos", "Cebu City, Philippines", "09234567890"));
+		clients.add(new Client("Pedro Reyes", "Davao City, Philippines", "09345678901"));
 
 		Dentist dentist1 = new Dentist("Dr. Enrique Villanueva", "Quezon City, Philippines", "09456789012", 10.0);
 		Dentist dentist2 = new Dentist("Dr. Andrea Ramos", "Taguig City, Philippines", "09567890123", 12.5);
@@ -57,49 +62,154 @@ public class Main {
 		dentist2.addService(new Services("Whitening", 500.0));
 		dentist2.addService(new Services("Extraction", 700.0));
 
-		dentists.addAll(Arrays.asList(dentist1, dentist2));
+		dentists.add(dentist1);
+		dentists.add(dentist2);
+
 	}
 
 	private static void addClient(Scanner scanner) {
-		System.out.print("Enter client name: ");
-		String name = getValidString(scanner);
+		String name = InputValidator.validateNonEmptyInput(scanner, "Enter client name: ");
+		String address = InputValidator.validateNonEmptyInput(scanner, "Enter client address: ");
+		String contactNumber = InputValidator.validateContactNumber(scanner, "Enter contact number: ", 11);
 
-		System.out.print("Enter client address: ");
-		String address = getValidString(scanner);
-
-		System.out.print("Enter contact number (11 digits): ");
-		String contactNumber = getValidPhoneNumber(scanner);
-
-		clients.add(new Client(name, address, contactNumber));
-		System.out.println("Client added successfully!");
+		Client client = new Client(name, address, contactNumber);
+		clients.add(client);
+		System.out.println("Client added successfully! ID: " + client.getClientID());
 	}
 
 	private static void addDentist(Scanner scanner) {
-		System.out.print("Enter dentist name: ");
-		String name = getValidString(scanner);
-
-		System.out.print("Enter dentist address: ");
-		String address = getValidString(scanner);
-
-		System.out.print("Enter contact number (11 digits): ");
-		String contactNumber = getValidPhoneNumber(scanner);
-
-		System.out.print("Enter commission rate (0-100%): ");
-		double commissionRate = getValidDouble(scanner);
+		String name = InputValidator.validateNonEmptyInput(scanner, "Enter dentist name: ");
+		String address = InputValidator.validateNonEmptyInput(scanner, "Enter dentist address: ");
+		String contactNumber = InputValidator.validateContactNumber(scanner, "Enter contact number: ", 11);
+		double commissionRate = InputValidator.validatePositiveDouble(scanner, "Enter commission rate (0% - 100%): ");
 
 		Dentist dentist = new Dentist(name, address, contactNumber, commissionRate);
+
+		selectServicesForDentist(dentist, scanner);
+
+		System.out.println("Services selected:");
+		for (Services service : dentist.getServicesOffered()) {
+			System.out.println("- " + service.getServiceName() + ": " + service.getPrice());
+		}
 		dentists.add(dentist);
-		System.out.println("Dentist added successfully!");
+		System.out.println("Dentist added successfully! ID: " + dentist.getDentistID());
 	}
 
+	private static void selectServicesForDentist(Dentist dentist, Scanner scanner) {
+		System.out.println("Enter services offered: ");
+		System.out.println("[1] Fillings");
+		System.out.println("[2] Check-Up");
+		System.out.println("[3] Whitening");
+		System.out.println("[4] Extraction");
 
+		int choices;
+		while (true) {
+			choices = InputValidator.validatePositiveInt(scanner, "Enter a choice: ");
+
+			if (choices < 1 || choices > 4) {
+				System.out.println("Invalid choice. Please select a number between 1 and 4.");
+				continue;
+			}
+
+			dentist.addService(new Services(dentist.getServiceIndex(choices),
+					dentist.getServicePrice(dentist.getServiceIndex(choices))));
+			break;
+		}
+
+		while (true) {
+
+			System.out.println("Enter Another service offered?");
+			System.out.println("[1] Yes");
+			System.out.println("[2] No");
+			int another = InputValidator.validatePositiveInt(scanner, "Enter a choice: ");
+			if (another == 1) {
+				while (true) {
+					System.out.println("Enter services offered: ");
+					System.out.println("[1] Fillings");
+					System.out.println("[2] Check-Up");
+					System.out.println("[3] Whitening");
+					System.out.println("[4] Extraction");
+					choices = InputValidator.validatePositiveInt(scanner, "Enter a choice: ");
+
+					if (choices < 1 || choices > 4) {
+						System.out.println("Invalid choice. Please select a number between 1 and 4.");
+						continue;
+					}
+
+					dentist.addService(new Services(dentist.getServiceIndex(choices),
+							dentist.getServicePrice(dentist.getServiceIndex(choices))));
+					break;
+				}
+			} else if (another == 2) {
+				break;
+			} else {
+				System.out.println("Invalid input. Please enter 1 (Yes) or 2 (No).");
+			}
+		}
+	}
 
 	private static void createTransaction(Scanner scanner) {
-		if (clients.isEmpty() || dentists.isEmpty()) {
-			System.out.println("Cannot create transaction. No clients or dentists available.");
+		Client client = selectClient(scanner);
+		Dentist dentist = selectDentist(scanner);
+		List<Services> selectedServices = selectServices(scanner, dentist);
+
+		if (selectedServices.isEmpty()) {
+			System.out.println("No services selected. Transaction canceled.");
 			return;
 		}
-		System.out.println("Transaction created successfully!");
+
+		Transaction transaction = new Transaction(client, dentist, selectedServices);
+		transactions.add(transaction);
+		System.out.println("Transaction recorded successfully! Transaction ID: " + transaction.getTransactionID());
+	}
+
+	private static Client selectClient(Scanner scanner) {
+		if (clients.isEmpty()) {
+			System.out.println("No clients available.");
+			return null;
+		}
+		System.out.println("\nSelect a Client:");
+		for (int i = 0; i < clients.size(); i++) {
+			System.out.println((i + 1) + ". " + clients.get(i).getClientID() + " - " + clients.get(i).getName());
+		}
+		int choice = InputValidator.validatePositiveInt(scanner, "Enter a choice: ");
+		return clients.get(choice - 1);
+	}
+
+	private static Dentist selectDentist(Scanner scanner) {
+		if (dentists.isEmpty()) {
+			System.out.println("No dentists available.");
+			return null;
+		}
+		System.out.println("\nSelect a Dentist:");
+		for (int i = 0; i < dentists.size(); i++) {
+			System.out.println((i + 1) + ". " + dentists.get(i).getDentistID() + " - " + dentists.get(i).getName());
+		}
+		int choice = InputValidator.validatePositiveInt(scanner, "Enter a choice: ");
+		return dentists.get(choice - 1);
+	}
+
+	private static List<Services> selectServices(Scanner scanner, Dentist dentist) {
+		List<Services> selectedServices = new ArrayList<>();
+		List<Services> offeredServices = dentist.getServicesOffered();
+
+		System.out.println("\nAvailable Services:");
+		for (int i = 0; i < offeredServices.size(); i++) {
+			System.out.println("[" + (i + 1) + "] " + offeredServices.get(i).getServiceName() + " (₱"
+					+ offeredServices.get(i).getPrice() + ")");
+		}
+		while (true) {
+			int choice = InputValidator.validatePositiveInt(scanner, "Enter service number (or 0 to finish): ");
+			if (choice == 0)
+				break;
+			if (choice > 0 && choice <= offeredServices.size()) {
+				selectedServices.add(offeredServices.get(choice - 1));
+				System.out.println("Service added: " + offeredServices.get(choice - 1).getServiceName());
+			} else {
+				System.out.println("Invalid choice. Try again.");
+			}
+		}
+		return selectedServices;
 	}
 
 	private static void archiveTransaction(Scanner scanner) {
@@ -107,6 +217,9 @@ public class Main {
 			System.out.println("No transactions available to archive.");
 			return;
 		}
+		viewTransactions(transactions, "Select a transaction to archive:");
+		int choice = InputValidator.validatePositiveInt(scanner, "Enter a choice: ");
+		archivedTransactions.add(transactions.remove(choice - 1));
 		System.out.println("Transaction archived successfully!");
 	}
 
@@ -114,46 +227,9 @@ public class Main {
 		System.out.println("\n==== " + header + " ====");
 		if (transactionList.isEmpty()) {
 			System.out.println("No transactions recorded.");
+			return;
 		}
-	}
-	
-	
-	//Input Validator
-	private static int getValidInt(Scanner scanner) {
-		while (!scanner.hasNextInt()) {
-			System.out.print("Invalid input. Enter a number: ");
-			scanner.next();
-		}
-		return scanner.nextInt();
+		transactionList.forEach(Transaction::displayTransaction);
 	}
 
-	private static double getValidDouble(Scanner scanner) {
-		while (!scanner.hasNextDouble()) {
-			System.out.print("Invalid input. Enter a valid number: ");
-			scanner.next();
-		}
-		return scanner.nextDouble();
-	}
-
-	private static String getValidString(Scanner scanner) {
-		String input;
-		do {
-			input = scanner.nextLine().trim();
-			if (input.isEmpty()) {
-				System.out.print("Input cannot be empty. Try again: ");
-			}
-		} while (input.isEmpty());
-		return input;
-	}
-
-	private static String getValidPhoneNumber(Scanner scanner) {
-		String phone;
-		do {
-			phone = scanner.nextLine().trim();
-			if (!phone.matches("\\d{11}")) {
-				System.out.print("Invalid phone number. Enter exactly 11 digits: ");
-			}
-		} while (!phone.matches("\\d{11}"));
-		return phone;
-	}
 }
