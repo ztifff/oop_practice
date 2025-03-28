@@ -44,14 +44,4 @@ public class ClientService {
 		return clients;
 	}
 
-    public void listClients() {
-        if (clients.isEmpty()) {
-            System.out.println("No clients registered.");
-            return;
-        }
-        System.out.println("Registered Clients:");
-        for (Client c : clients) {
-            System.out.println(c);
-        }
-    }
 }
