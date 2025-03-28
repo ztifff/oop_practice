@@ -23,7 +23,7 @@ public class InputValidator {
 
             try {
                 value = Double.parseDouble(input);
-                if (value >= 0) {
+                if (value >= 1) {
                     return value; 
                 } else {
                     System.out.println("Invalid input. Please enter a positive number.\n");
