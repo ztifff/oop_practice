@@ -1,27 +1,183 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1.0">
-  <zoom_level>10</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>320</x>
-      <y>230</y>
-      <w>210</w>
-      <h>190</h>
+      <x>576</x>
+      <y>64</y>
+      <w>336</w>
+      <h>104</h>
     </coordinates>
-    <panel_attributes>&lt;&lt;Stereotype&gt;&gt;
-Package::FatClass
-{Some Properties}
+    <panel_attributes>Person
 --
--id: Long {composite}
-_-ClassAttribute: Long_
---
-#Operation(i: int): int
-/+AbstractOperation()/
---
-Responsibilities
--- Resp1
--- Resp2</panel_attributes>
+# name : String
+# address : String
+# contactNumber : String
++ Person(String name, String address, String contactNumber)
+--</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>16</x>
+      <y>192</y>
+      <w>400</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>Client
+--
+_- idCounter : int = 1_
+- clientID : String
++ Client(name : String, address : String, contactNumber : String)
+--
++ getClientID() : String
++ getName() : String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1088</x>
+      <y>200</y>
+      <w>336</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>Dentist
+--
+_- idCounter : int = 1_
+- DentistID : String
+- commissionRate : double
+- servicesOffered : List&lt;Services&gt;
++ Dentist(name : String, address : String, contactNumber : String)
+--
++ getName() : String
++ getDentistID() : String
++ getCommisionRate() : double
++ getServicesOffered() : List&lt;Services&gt;
++ addService(service : Services) : void
++ getServicePrice(serviceName : String) : double
++ getServiceIndex(services : int) : String
++ toString() : String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>840</x>
+      <y>448</y>
+      <w>336</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>Services
+--
+- serviceName : String
+- price : double
+- dentists : List&lt;Dentist&gt;
++ Services(serviceName : String, price : double)
+--
++ getServiceName() : String
++ getPrice() : double
++ getDentist() : List&lt;Dentist&gt;
++ addDentist(dentist : Dentist) : void
++ toString() : String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>544</x>
+      <y>200</y>
+      <w>408</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>Transaction
+--
+_- idCounter : int = 1_
+- transactionID : String
+- date : Date
+- client : Client
+- dentistsInvolved : List&lt;Dentist&gt;
+- services : List&lt;Services&gt;
++ Transaction(client : Client, dentists : List&lt;Dentist&gt;, services : List&lt;Services&gt;)
+--
++ getTransactionID() : String
++ displayTransaction() : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>904</x>
+      <y>112</y>
+      <w>368</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;440.0;10.0;440.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>216</x>
+      <y>112</y>
+      <w>376</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>450.0;10.0;10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>736</x>
+      <y>392</y>
+      <w>120</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1..*</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;190.0;130.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1168</x>
+      <y>392</y>
+      <w>120</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1..*
+m2=1..*</panel_attributes>
+    <additional_attributes>110.0;10.0;110.0;220.0;10.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>408</x>
+      <y>296</y>
+      <w>152</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=1..*</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>944</x>
+      <y>304</y>
+      <w>160</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1..*
+m2=1..*</panel_attributes>
+    <additional_attributes>180.0;10.0;10.0;10.0</additional_attributes>
   </element>
 </diagram>

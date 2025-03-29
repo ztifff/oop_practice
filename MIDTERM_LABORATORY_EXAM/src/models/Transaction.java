@@ -6,40 +6,45 @@ import java.util.List;
 
 public class Transaction {
 	private static int idCounter = 1;
-    private final String transactionID;
-    private Date date;
-    private Client client;
-    private Dentist dentist;
-    private List<Services> services;
-    
-    public Transaction(Client client, Dentist dentist, List<Services> services) {
-        this.transactionID = String.format("%04d", idCounter++);
-        this.date = new Date();
-        this.client = client;
-        this.dentist = dentist;
-        this.services = new ArrayList<>(services);
-        
-    }
-    
-    
-    public String getTransactionID() {
+	private String transactionID;
+	private Date date;
+	private Client client;
+	private List<Dentist> dentistsInvolved;
+	private List<Services> services;
+
+	public Transaction(Client client, List<Dentist> dentists, List<Services> services) {
+		this.transactionID = String.format("%04d", idCounter++);
+		this.date = new Date();
+		this.client = client;
+		this.dentistsInvolved = new ArrayList<>(dentists);
+		this.services = new ArrayList<>(services);
+	}
+
+
+	public String getTransactionID() {
 		return transactionID;
 	}
-    
-    
-    public void displayTransaction() {
-    	System.out.println("\nTransaction ID: " + transactionID);
-    	System.out.println("Date: " + date);
-    	System.out.println("Client: " + client.getClientID() + " - " + client.getName());
-    	System.out.println("Dentist: " + dentist.getDentistID() + " - " + dentist.getName());
-    	System.out.println("Services:");
 
-    	double total = 0;
-    	for (Services s : services) {
-    	    System.out.println(" - " + s.getServiceName() + " (₱" + s.getPrice() + ")");
-    	    total += s.getPrice();
-    	}
 
-    	System.out.println("Total Cost: ₱" + total);
-    }
+	public void displayTransaction() {
+		System.out.println("\nTransaction ID: " + transactionID);
+		System.out.println("Date: " + date);
+		System.out.println("Client: " + client.getClientID() + " - " + client.getName());
+		
+		double total = 0;
+		
+		 System.out.println("Dentists and their Services Involved:");
+	        for (Dentist dentist : dentistsInvolved) {
+	            System.out.println(" - " + dentist.getDentistID() + " - " + dentist.getName());
+
+		
+		 for (Services service : services) {
+			 if (service.getDentists().contains(dentist)) {  
+	                System.out.println(" -> " + service.getServiceName() + " (₱" + service.getPrice() + ")");
+	                total += service.getPrice();
+	            }
+	        }
+	        }
+		System.out.println("Total Cost: ₱" + total);
+	}
 }
