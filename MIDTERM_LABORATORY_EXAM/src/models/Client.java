@@ -19,4 +19,12 @@ public class Client extends Person {
 	public String getName() {
 		return name;
 	}
+	
+	public String getAddress() {
+		return super.address;
+	}
+	
+	public String getContactNumber() {
+		return super.contactNumber;
+	}
 }

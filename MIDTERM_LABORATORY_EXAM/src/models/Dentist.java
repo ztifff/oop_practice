@@ -23,6 +23,14 @@ public class Dentist extends Person {
 	public String getDentistID() {
 		return dentistID;
 	}
+	
+	public String getAddress() {
+		return super.address;
+	}
+	
+	public String getContactNumber() {
+		return super.contactNumber;
+	}
 
 	public double getCommissionRate() {
 		return commissionRate;

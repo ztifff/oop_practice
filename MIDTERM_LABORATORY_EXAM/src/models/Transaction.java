@@ -20,31 +20,30 @@ public class Transaction {
 		this.services = new ArrayList<>(services);
 	}
 
-
 	public String getTransactionID() {
 		return transactionID;
 	}
-
 
 	public void displayTransaction() {
 		System.out.println("\nTransaction ID: " + transactionID);
 		System.out.println("Date: " + date);
 		System.out.println("Client: " + client.getClientID() + " - " + client.getName());
-		
-		double total = 0;
-		
-		 System.out.println("Dentists and their Services Involved:");
-	        for (Dentist dentist : dentistsInvolved) {
-	            System.out.println(" - " + dentist.getDentistID() + " - " + dentist.getName());
 
-		
-		 for (Services service : services) {
-			 if (service.getDentists().contains(dentist)) {  
-	                System.out.println(" -> " + service.getServiceName() + " (₱" + service.getPrice() + ")");
-	                total += service.getPrice();
-	            }
-	        }
-	        }
+		double total = 0;
+
+		System.out.println("Dentists and their Services Involved:\n");
+		for (Dentist dentist : dentistsInvolved) {
+			System.out.println(" -> " + dentist.getDentistID() + " - " + dentist.getName() + ":\n");
+
+
+			for (Services service : services) {
+				if (service.getDentists().contains(dentist)) {  
+					System.out.println(" - " + service.getServiceName() + " (₱" + service.getPrice() + ")");
+					total += service.getPrice();
+				}
+			}
+			System.out.println();
+		}
 		System.out.println("Total Cost: ₱" + total);
 	}
 }

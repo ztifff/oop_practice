@@ -11,10 +11,10 @@ import utils.InputValidator;
 import models.Services;
 
 public class Main {
-	private static final List<Client> clients = new ArrayList<>();
-	private static final List<Dentist> dentists = new ArrayList<>();
-	private static final List<Transaction> transactions = new ArrayList<>();
-	private static final List<Transaction> archivedTransactions = new ArrayList<>();
+	private static List<Client> clients = new ArrayList<>();
+	private static List<Dentist> dentists = new ArrayList<>();
+	private static List<Transaction> transactions = new ArrayList<>();
+	private static List<Transaction> archivedTransactions = new ArrayList<>();
 
 	//=================================================================================================================================
 	//Main Menu
@@ -22,27 +22,43 @@ public class Main {
 		Scanner scanner = new Scanner(System.in);
 		initializeData();
 
+		System.out.println("================================================================");
+		System.out.println("   	    Welcome to the Clinic Management System ");
+		System.out.println("================================================================");
+		System.out.println("This system helps manage client records, dentist information, ");
+		System.out.println("and transactions efficiently.");
+		System.out.println("\nPress Enter to continue...");
+		scanner.nextLine();
+
 		while (true) {
-			System.out.println("\n==== Clinic Management System ====");
-			System.out.println("1. Add Client");
-			System.out.println("2. Add Dentist");
-			System.out.println("3. Create Transaction");
-			System.out.println("4. View Transactions");
-			System.out.println("5. Archive Transaction");
-			System.out.println("6. View Archived Transactions");
-			System.out.println("7. Exit");
+			System.out.println("\n======================================");
+			System.out.println("|              Main Menu             |");
+			System.out.println("======================================");
+			System.out.println("| 1. Register a New Client           |");
+			System.out.println("| 2. Register a New Dentist          |");
+			System.out.println("| 3. View Registered Clients         |");
+			System.out.println("| 4. View Registered Dentists        |");
+			System.out.println("| 5. Record a New Transaction        |");
+			System.out.println("| 6. View All Transactions           |");
+			System.out.println("| 7. Archive a Transaction           |");
+			System.out.println("| 8. View Archived Transactions      |");
+			System.out.println("| 9. Exit                            |");
+			System.out.println("======================================");
 
 			int choice = InputValidator.validatePositiveInt(scanner, "Choose an option: ");
 
 			switch (choice) {
 			case 1 -> addClient(scanner);
 			case 2 -> addDentist(scanner);
-			case 3 -> createTransaction(scanner);
-			case 4 -> viewTransactions(transactions, "Active Transactions");
-			case 5 -> archiveTransaction(scanner);
-			case 6 -> viewTransactions(archivedTransactions, "Archived Transactions");
-			case 7 -> {
-				System.out.println("Exiting...");
+			case 3 -> viewRegisteredClients(scanner);
+			case 4 -> viewRegisteredDentists(scanner);
+			case 5 -> createTransaction(scanner);
+			case 6 -> viewTransactions(transactions, "Active Transactions");
+			case 7 -> archiveTransaction(scanner);
+			case 8 -> viewTransactions(archivedTransactions, "Archived Transactions");
+			case 9 -> {
+				System.out.println("\nThank you for using the Clinic Management System.");
+				System.out.println("Exiting the system... Goodbye!");
 				scanner.close();
 				return;
 			}
@@ -99,6 +115,32 @@ public class Main {
 		}
 		dentists.add(dentist);
 		System.out.println("Dentist added successfully! ID: " + dentist.getDentistID());
+	}
+
+	//=================================================================================================================================
+	//View Registered Clients
+	private static void viewRegisteredClients(Scanner scanner) {
+		System.out.println("\n=========================================== Registered Clients ===========================================");
+	    System.out.printf("%-15s | %-40s | %-30s | %-15s%n", "Client ID", "Client Name", "Address", "Contact No.");
+	    System.out.println("----------------------------------------------------------------------------------------------------------");
+
+	    for (Client client : clients) {
+	        System.out.printf("%-15s | %-40s | %-30s | %-15s%n", 
+	            client.getClientID(), client.getName(), client.getAddress(), client.getContactNumber());
+	    }
+	}
+
+	//=================================================================================================================================
+	//View Registered Dentists
+	private static void viewRegisteredDentists(Scanner scanner) {
+		System.out.println("\n=================================================== Registered Dentists ===================================================");
+	    System.out.printf("%-15s | %-40s | %-30s | %-15s | %-10s%n", "Dentist ID", "Dentist Name", "Address", "Contact No.", "Commission");
+	    System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+
+	    for (Dentist dentist : dentists) {
+	        System.out.printf("%-15s | %-40s | %-30s | %-15s | %-10.2f%%%n", 
+	            dentist.getDentistID(), dentist.getName(), dentist.getAddress(), dentist.getContactNumber(), dentist.getCommissionRate());
+	    }
 	}
 
 	//=================================================================================================================================
@@ -162,7 +204,7 @@ public class Main {
 		Client client = selectClient(scanner);
 		List<Dentist> dentists = new ArrayList<>();
 		List<Services> selectedServices = new ArrayList<>();
-		
+
 		Dentist dentist = selectDentist(scanner);
 		dentists.add(dentist);
 
@@ -184,7 +226,7 @@ public class Main {
 				if (choice == 1 || choice == 2) {
 					break;  // Valid input, exit loop
 				}
-				System.out.println("Invalid input! Please enter 1 or 2.");
+				System.out.println("Invalid input! Please enter 1 or 2.\n");
 			}
 
 			if (choice == 1) {
@@ -201,7 +243,7 @@ public class Main {
 						if (confirm == 1 || confirm == 2) {
 							break;  // Valid input, exit loop
 						}
-						System.out.println("Invalid input! Please enter 1 or 2.");
+						System.out.println("Invalid input! Please enter 1 or 2.\n");
 					}
 
 					if (confirm == 2) {
@@ -227,11 +269,11 @@ public class Main {
 							if (confirm == 1 || confirm == 2) {
 								break;  // Valid input, exit loop
 							}
-							System.out.println("Invalid input! Please enter 1 or 2.");
+							System.out.println("Invalid input! Please enter 1 or 2.\n");
 						}
 
 						if (confirm == 2) {
-							System.out.println(service.getServiceName() + " not added again.");
+							System.out.println(service.getServiceName() + " not added again.\n");
 							continue;
 						} 
 					}
@@ -241,13 +283,11 @@ public class Main {
 				if (!newServices.isEmpty()) {
 					System.out.println("Dentist and services added.");
 				} else {
-					System.out.println("No services selected for this dentist. Skipping.");
+					System.out.println("No services selected for this dentist. Skipping.\n");
 				}
 			} else if (choice ==2) {
 				break;
-			} else {
-				System.out.println("Invalid input!");
-			}
+			} 
 		}
 
 		Transaction transaction = new Transaction(client, dentists, selectedServices);
@@ -264,16 +304,14 @@ public class Main {
 			return null;
 		}
 		System.out.println("\nSelect a Client:");
-		for (int i = 0; i < clients.size(); i++) {
-			System.out.println((i + 1) + ". " + clients.get(i).getClientID() + " - " + clients.get(i).getName());
-		}
+		viewRegisteredClients(scanner);
 		int choice;
 		while (true) {
-			choice = InputValidator.validatePositiveInt(scanner, "Enter a choice: ");
+			choice = InputValidator.validatePositiveInt(scanner, "\nEnter Client ID(e.g., 1 for Juan Dela Cruz, 2 for Maria Santos): ");
 			if (choice >= 1 && choice <= clients.size()) {
 				break;  // Valid choice, exit loop
 			}
-			System.out.println("Invalid choice! Please select a number between 1 and " + clients.size());
+			System.out.println("Invalid choice! Please select a number between 1 and " + clients.size() + "\n");
 		}
 
 		return clients.get(choice - 1);
@@ -287,16 +325,15 @@ public class Main {
 			return null;
 		}
 		System.out.println("\nSelect a Dentist:");
-		for (int i = 0; i < dentists.size(); i++) {
-			System.out.println((i + 1) + ". " + dentists.get(i).getDentistID() + " - " + dentists.get(i).getName());
-		}
+		viewRegisteredDentists(scanner);
+		
 		int choice;
 		while (true) {
-			choice = InputValidator.validatePositiveInt(scanner, "Enter a choice: ");
+			choice = InputValidator.validatePositiveInt(scanner, "\nEnter Dentist ID(e.g., 1 for Juan Dela Cruz, 2 for Maria Santos): ");
 			if (choice >= 1 && choice <= dentists.size()) {
 				break;  // Valid choice, exit loop
 			}
-			System.out.println("Invalid choice! Please select a number between 1 and " + dentists.size());
+			System.out.println("Invalid choice! Please select a number between 1 and " + dentists.size() + "\n");
 		}
 
 		return dentists.get(choice - 1);
@@ -318,10 +355,16 @@ public class Main {
 			if (choice == 0)
 				break;
 			if (choice > 0 && choice <= offeredServices.size()) {
-				selectedServices.add(offeredServices.get(choice - 1));
-				System.out.println("Service added: " + offeredServices.get(choice - 1).getServiceName());
+				Services selectedService = offeredServices.get(choice - 1);
+				
+				if (selectedServices.contains(selectedService)) {
+	                System.out.println("This service is already selected. Choose a different service.\n");
+	            } else {
+	                selectedServices.add(selectedService);
+	                System.out.println("Service added: " + selectedService.getServiceName());
+	            }
 			} else {
-				System.out.println("Invalid choice. Try again.");
+				System.out.println("Invalid choice. Try again.\n");
 			}
 		}
 		return selectedServices;
@@ -330,29 +373,29 @@ public class Main {
 	//=================================================================================================================================
 	//Archive Transaction and View Archive Transaction
 	private static void archiveTransaction(Scanner scanner) {
-	    if (transactions.isEmpty()) {
-	        System.out.println("No transactions available to archive.");
-	        return;
-	    }
+		if (transactions.isEmpty()) {
+			System.out.println("No transactions available to archive.");
+			return;
+		}
 
-	    // Display transactions with numbered choices
-	    System.out.println("==== Select a transaction to archive: ====");
-	    for (int i = 0; i < transactions.size(); i++) {
-	        System.out.println("[" + (i + 1) + "] " + "Transaction ID: " + transactions.get(i).getTransactionID()); // Numbered list
-	    }
+		// Display transactions with numbered choices
+		System.out.println("==== Select a transaction to archive: ====");
+		for (int i = 0; i < transactions.size(); i++) {
+			System.out.println("[" + (i + 1) + "] " + "Transaction ID: " + transactions.get(i).getTransactionID()); // Numbered list
+		}
 
-	    // Get user choice
-	    int choice = InputValidator.validatePositiveInt(scanner, "\nEnter a choice: ") - 1;
+		// Get user choice
+		int choice = InputValidator.validatePositiveInt(scanner, "\nEnter a choice: ") - 1;
 
-	    // Validate if the choice is within range
-	    if (choice < 0 || choice >= transactions.size()) {
-	        System.out.println("Invalid choice! Please enter a valid transaction number.");
-	        return;
-	    }
+		// Validate if the choice is within range
+		if (choice < 0 || choice >= transactions.size()) {
+			System.out.println("Invalid choice! Please enter a valid transaction number.");
+			return;
+		}
 
-	    // Move selected transaction to archivedTransactions
-	    archivedTransactions.add(transactions.remove(choice));
-	    System.out.println("Transaction archived successfully!");
+		// Move selected transaction to archivedTransactions
+		archivedTransactions.add(transactions.remove(choice));
+		System.out.println("Transaction archived successfully!");
 	}
 
 
